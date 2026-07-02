@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>National Exploring Dashboard</title>
+    <link rel="icon" href="assets/favicon-32.png">
+    <link rel="stylesheet" href="exploring-dashboard.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">National dashboard</p>
+        <h1>National Exploring Dashboard</h1>
+      </div>
+      <div class="header-actions">
+        <span id="updatedAt">Loading data...</span>
+        <a href="../data/national-exploring-dashboard-data.json">Data</a>
+        <a href="../data/national-exploring-posts.csv">Posts CSV</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="summary-grid" aria-label="National summary">
+        <article class="metric-card">
+          <span>Posts</span>
+          <strong id="postCount">0</strong>
+          <small id="needsAttention">0 need attention</small>
+        </article>
+        <article class="metric-card">
+          <span>Total youth</span>
+          <strong id="youthCount">0</strong>
+          <small>Current workbook total</small>
+        </article>
+        <article class="metric-card">
+          <span>Primary youth</span>
+          <strong id="primaryYouth">0</strong>
+          <small id="primaryDelta">0 YOY</small>
+        </article>
+        <article class="metric-card">
+          <span>Avg unit metric</span>
+          <strong id="avgMetric">0.00</strong>
+          <small id="trainingRate">0% with metric credit</small>
+        </article>
+        <article class="metric-card">
+          <span>Councils</span>
+          <strong id="councilCount">0</strong>
+          <small id="filteredCount">0 posts in current view</small>
+        </article>
+      </section>
+
+      <section class="controls" aria-label="Filters">
+        <label>
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Post, council, district, charter org">
+        </label>
+        <label>
+          <span>CST</span>
+          <select id="cstFilter"></select>
+        </label>
+        <label>
+          <span>Focus</span>
+          <select id="focusFilter"></select>
+        </label>
+        <label>
+          <span>Health</span>
+          <select id="healthFilter"></select>
+        </label>
+      </section>
+
+      <section class="quick-filters" aria-label="Quick filters">
+        <button class="chip active" type="button" data-filter="all">All</button>
+        <button class="chip" type="button" data-filter="growth">Growing</button>
+        <button class="chip" type="button" data-filter="attention">Needs attention</button>
+        <button class="chip" type="button" data-filter="renewal">Renewing soon</button>
+        <span id="visibleCount">0 posts</span>
+      </section>
+
+      <section class="dashboard-layout">
+        <div class="board-panel">
+          <div class="section-title">
+            <h2>Post Health Board</h2>
+            <div>
+              <button id="collapseAll" type="button">Collapse</button>
+              <button id="expandAll" type="button">Expand</button>
+            </div>
+          </div>
+          <div id="groupRows" class="group-rows"></div>
+        </div>
+        <aside id="postDetail" class="post-detail empty-state">
+          Select a post row to see contact, renewal, youth, and metric detail.
+        </aside>
+      </section>
+
+      <section class="breakdown-grid" aria-label="Breakdowns">
+        <article>
+          <h2>CST Summary</h2>
+          <div id="cstBars"></div>
+        </article>
+        <article>
+          <h2>Top Councils By Youth</h2>
+          <div id="councilBars"></div>
+        </article>
+        <article>
+          <h2>Focus</h2>
+          <div id="focusBars"></div>
+        </article>
+        <article>
+          <h2>Renewals</h2>
+          <div id="renewalBars"></div>
+        </article>
+        <article>
+          <h2>Unit Metric By CST</h2>
+          <div id="metricBars"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="exploring-dashboard.js"></script>
+  </body>
+</html>
