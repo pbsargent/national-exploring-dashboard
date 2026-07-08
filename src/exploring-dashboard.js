@@ -251,6 +251,7 @@ function summarizeFocusAreas(rows) {
     .map((group) => {
       const primaryYoy = group.rows.reduce((sum, post) => sum + asNumber(post.primaryYoy), 0);
       const metricTotal = group.rows.reduce((sum, post) => sum + asNumber(post.unitMetric), 0);
+      const retentionTotal = group.rows.reduce((sum, post) => sum + asNumber(post.retention), 0);
       const completeTraining = group.rows.filter((post) => trainingLabel(post) === "Complete").length;
       const needsAttention = group.rows.filter((post) => post.health === "Needs attention").length;
       return {
@@ -259,6 +260,7 @@ function summarizeFocusAreas(rows) {
         youth: group.youth,
         primaryYoy,
         averageMetric: group.rows.length ? metricTotal / group.rows.length : 0,
+        retentionRate: group.rows.length ? retentionTotal / group.rows.length : 0,
         trainingRate: group.rows.length ? completeTraining / group.rows.length : 0,
         needsAttention,
         progress: progressFor(group.rows),
@@ -287,6 +289,7 @@ function renderFocusSummary() {
         <span>Youth</span>
         <span>YOY</span>
         <span>Metric</span>
+        <span>Retention</span>
         <span>Training</span>
         <span>Attention</span>
       </div>
@@ -300,6 +303,7 @@ function renderFocusSummary() {
           <span>${fmt.format(item.youth)}</span>
           <span class="delta ${item.primaryYoy >= 0 ? "positive" : "negative"}">${signedNumber(item.primaryYoy)}</span>
           <span>${oneDecimal.format(item.averageMetric)}</span>
+          <span>${pct.format(item.retentionRate)}</span>
           <span>${pct.format(item.trainingRate)}</span>
           <span>
             <span class="status-chip ${item.needsAttention ? "bad" : "good"}">${fmt.format(item.needsAttention)}</span>
