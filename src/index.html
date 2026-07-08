@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>National Exploring Dashboard</title>
     <link rel="icon" href="assets/favicon-32.png">
-    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-07-08-focus">
+    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-07-08-retention">
   </head>
   <body>
     <header class="app-header">
@@ -47,6 +47,11 @@
           <strong id="councilCount">0</strong>
           <small id="filteredCount">0 posts in current view</small>
         </article>
+      </section>
+
+      <section class="focus-summary-panel" aria-label="Focus area metrics">
+        <h2>Focus Area Metrics</h2>
+        <div id="focusSummary" class="focus-summary"></div>
       </section>
 
       <section class="controls" aria-label="Filters">
@@ -93,10 +98,6 @@
       </section>
 
       <section class="breakdown-grid" aria-label="Breakdowns">
-        <article class="focus-summary-panel">
-          <h2>Focus Area Metrics</h2>
-          <div id="focusSummary" class="focus-summary"></div>
-        </article>
         <article>
           <h2>CST Summary</h2>
           <div id="cstBars"></div>
@@ -120,6 +121,6 @@
       </section>
     </main>
 
-    <script src="exploring-dashboard.js?v=2026-07-08-focus"></script>
+    <script src="exploring-dashboard.js?v=2026-07-08-retention"></script>
   </body>
 </html>

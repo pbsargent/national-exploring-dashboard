@@ -120,7 +120,8 @@ main {
 .board-panel,
 .post-detail,
 .controls,
-.quick-filters {
+.quick-filters,
+.focus-summary-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -216,7 +217,8 @@ main {
 
 .board-panel,
 .post-detail,
-.breakdown-grid article {
+.breakdown-grid article,
+.focus-summary-panel {
   padding: 16px;
 }
 
@@ -612,7 +614,7 @@ main {
   border-radius: 8px;
   display: grid;
   gap: 10px;
-  grid-template-columns: minmax(180px, 1.7fr) repeat(6, minmax(82px, 1fr));
+  grid-template-columns: minmax(180px, 1.7fr) repeat(7, minmax(78px, 1fr));
   min-height: 54px;
   padding: 9px 10px;
 }
