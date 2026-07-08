@@ -121,6 +121,7 @@ function applyFilters() {
   setText("filteredCount", `${fmt.format(state.filtered.length)} posts in current view`);
   setText("visibleCount", `${fmt.format(state.filtered.length)} posts`);
   renderBoard();
+  renderFocusSummary();
 }
 
 function groupByCst(posts) {
@@ -243,6 +244,70 @@ function progressFor(rows) {
       + Number(post.unitMetric >= 3);
   }, 0);
   return Math.round((signals / (rows.length * 6)) * 100);
+}
+
+function summarizeFocusAreas(rows) {
+  return groupRows(rows, "focus")
+    .map((group) => {
+      const primaryYoy = group.rows.reduce((sum, post) => sum + asNumber(post.primaryYoy), 0);
+      const metricTotal = group.rows.reduce((sum, post) => sum + asNumber(post.unitMetric), 0);
+      const completeTraining = group.rows.filter((post) => trainingLabel(post) === "Complete").length;
+      const needsAttention = group.rows.filter((post) => post.health === "Needs attention").length;
+      return {
+        focus: group.name,
+        posts: group.rows.length,
+        youth: group.youth,
+        primaryYoy,
+        averageMetric: group.rows.length ? metricTotal / group.rows.length : 0,
+        trainingRate: group.rows.length ? completeTraining / group.rows.length : 0,
+        needsAttention,
+        progress: progressFor(group.rows),
+      };
+    })
+    .sort((a, b) => b.youth - a.youth || b.posts - a.posts || a.focus.localeCompare(b.focus));
+}
+
+function signedNumber(value) {
+  return `${value >= 0 ? "+" : ""}${fmt.format(value)}`;
+}
+
+function renderFocusSummary() {
+  const target = $("focusSummary");
+  if (!target) return;
+  const summaries = summarizeFocusAreas(state.filtered);
+  if (!summaries.length) {
+    target.innerHTML = `<div class="empty-state">No focus areas match the current filters.</div>`;
+    return;
+  }
+  target.innerHTML = `
+    <div class="focus-summary-table">
+      <div class="focus-summary-row focus-summary-header">
+        <span>Focus Area</span>
+        <span>Posts</span>
+        <span>Youth</span>
+        <span>YOY</span>
+        <span>Metric</span>
+        <span>Training</span>
+        <span>Attention</span>
+      </div>
+      ${summaries.map((item) => `
+        <div class="focus-summary-row">
+          <div class="focus-summary-main">
+            <strong>${escapeHtml(item.focus || "General")}</strong>
+            <div class="track"><div class="fill" style="--w:${item.progress}%"></div></div>
+          </div>
+          <span>${fmt.format(item.posts)}</span>
+          <span>${fmt.format(item.youth)}</span>
+          <span class="delta ${item.primaryYoy >= 0 ? "positive" : "negative"}">${signedNumber(item.primaryYoy)}</span>
+          <span>${oneDecimal.format(item.averageMetric)}</span>
+          <span>${pct.format(item.trainingRate)}</span>
+          <span>
+            <span class="status-chip ${item.needsAttention ? "bad" : "good"}">${fmt.format(item.needsAttention)}</span>
+          </span>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
 function postPills(post) {

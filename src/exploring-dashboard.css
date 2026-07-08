@@ -597,6 +597,60 @@ main {
   height: 100%;
 }
 
+.focus-summary-panel {
+  grid-column: 1 / -1;
+}
+
+.focus-summary-table {
+  display: grid;
+  gap: 6px;
+}
+
+.focus-summary-row {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(180px, 1.7fr) repeat(6, minmax(82px, 1fr));
+  min-height: 54px;
+  padding: 9px 10px;
+}
+
+.focus-summary-header {
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  min-height: 36px;
+  text-transform: uppercase;
+}
+
+.focus-summary-main {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.focus-summary-main strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.focus-summary-row > span {
+  font-weight: 800;
+  min-width: 0;
+}
+
+.delta.positive {
+  color: var(--accent);
+}
+
+.delta.negative {
+  color: var(--accent-2);
+}
+
 .load-error {
   margin: 40px auto;
   max-width: 680px;
@@ -645,5 +699,17 @@ main {
   .service-row > :not(.district-cell),
   .council-row > :not(.district-cell) {
     display: none;
+  }
+
+  .focus-summary-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .focus-summary-header {
+    display: none;
+  }
+
+  .focus-summary-main {
+    grid-column: 1 / -1;
   }
 }
