@@ -77,6 +77,9 @@ function renderSummary() {
   setText("updatedAt", `Data as of ${shortDate(state.data.sourceAsOf || state.data.sourceModifiedAt?.slice(0, 10))}`);
   const notes = state.data.sourceNotes;
   if (notes) setText("sourceNotes", `Captured ${shortDate(state.data.generatedAt?.slice(0, 10))}. Primary youth: ${fmt.format(notes.primaryYouthDashboard)} on the workbook Dashboard; ${fmt.format(notes.primaryYouthPostRows)} across Posts rows. Primary YOY: ${signedNumber(notes.primaryYoyDashboard)} on the Dashboard; ${signedNumber(notes.primaryYoyPostRows)} across Posts rows. National primary youth and YOY use Dashboard totals; focus metrics use Posts rows. ${fmt.format(notes.postsWithoutUnitMetric)} posts have no matched UnitMetric record. ${notes.focusMethod} ${notes.retentionMethod} ${fmt.format(notes.invalidRetentionValues)} out-of-range retention values excluded.`);
+  setText("helpFreshness", `Data as of ${shortDate(state.data.sourceAsOf)} | Captured ${shortDate(state.data.generatedAt?.slice(0, 10))}`);
+  setText("helpWorkbook", `Source workbook: ${state.data.sourceWorkbook}. National membership comes from Dashboard and Posts; scorecard signals come from UnitMetric; council and CST comparisons use Council View and Unit Metric by CST; renewal status counts use Renewal.`);
+  setText("helpSourceNotes", $("sourceNotes").textContent);
   setText("postCount", fmt.format(summary.posts));
   setText("needsAttention", `${fmt.format(summary.needsAttention)} need attention`);
   setText("youthCount", fmt.format(summary.totalYouth));
@@ -533,6 +536,20 @@ function initFilters() {
   });
 }
 
+function initHelp() {
+  const dialog = $("dashboardHelp");
+  const trigger = $("openHelp");
+  trigger.addEventListener("click", () => dialog.showModal());
+  $("closeHelp").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => trigger.focus());
+  dialog.addEventListener("click", (event) => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+  });
+  $("printHelp").addEventListener("click", () => window.print());
+}
+
 async function start() {
   const response = await fetch("../data/national-exploring-dashboard-data.json", { cache: "no-store" });
   if (!response.ok) throw new Error(`Unable to load dashboard data: ${response.status}`);
@@ -546,6 +563,7 @@ async function start() {
   applyFilters();
 }
 
+initHelp();
 start().catch((error) => {
   document.body.innerHTML = `<main class="load-error"><h1>Dashboard failed to load</h1><p>${error.message}</p></main>`;
 });

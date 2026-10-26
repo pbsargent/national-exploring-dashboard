@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>National Exploring Dashboard</title>
     <link rel="icon" href="assets/exploring-favicon-32.png">
-    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-10-26-exploring">
+    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-10-26-help">
   </head>
   <body>
     <header class="app-header">
@@ -21,6 +21,7 @@
         <span id="updatedAt">Loading data...</span>
         <a href="../data/national-exploring-dashboard-data.json">Data</a>
         <a href="../data/national-exploring-posts.csv">Posts CSV</a>
+        <button id="openHelp" class="help-trigger" type="button" aria-haspopup="dialog" aria-controls="dashboardHelp" title="Using the dashboard"><span aria-hidden="true">?</span> Help</button>
       </div>
     </header>
 
@@ -130,6 +131,75 @@
       </section>
     </main>
 
-    <script src="exploring-dashboard.js?v=2026-10-26-r2"></script>
+    <dialog id="dashboardHelp" class="help-dialog" aria-labelledby="helpTitle">
+      <header class="help-header">
+        <div><p class="eyebrow">Dashboard guide</p><h2 id="helpTitle">Using the Exploring Dashboard</h2><p id="helpFreshness">Checking source date...</p></div>
+        <button id="closeHelp" class="help-close" type="button" aria-label="Close help" title="Close help">&times;</button>
+      </header>
+      <div class="help-content">
+        <nav class="help-topics" aria-label="Help topics">
+          <a href="#helpStart">Quick start</a><a href="#helpControls">Controls</a><a href="#helpMetrics">Metrics</a><a href="#helpSource">Sources</a><a href="#helpTrouble">Troubleshooting</a>
+        </nav>
+        <section id="helpStart" class="help-section">
+          <h3>Quick Start</h3>
+          <ol class="help-steps">
+            <li><strong>Check the source date.</strong> This is a published workbook snapshot. Reloading the website does not refresh the OneDrive workbook.</li>
+            <li><strong>Start with the national summary.</strong> Review membership, unit metrics and focus-area comparisons.</li>
+            <li><strong>Narrow the view.</strong> Combine CST, focus, health, search and a quick filter to find posts for follow-up.</li>
+            <li><strong>Open the board.</strong> Expand a CST, then a council, then select a post to review its detail.</li>
+          </ol>
+        </section>
+        <section id="helpControls" class="help-section">
+          <h3>Filters, Search and Expand/Collapse</h3>
+          <dl class="help-definitions">
+            <div><dt>Search and selectors</dt><dd>Search matches post name, council, district, charter organization or unit number without regard to case. CST means Council Service Territory. All active controls combine.</dd></div>
+            <div><dt>Quick filters</dt><dd>Growing means primary YOY is positive. Needs attention uses the health rules below. Renewing soon means a renewal falls in the next 120 days from the capture timestamp; past renewals are excluded.</dd></div>
+            <div><dt>What changes with filters?</dt><dd>The Focus Area Metrics panel, Post Health Board and visible-post counts update. National summary totals and the lower CST, council, focus, renewal and metric charts remain national snapshots.</dd></div>
+            <div><dt>Expand and Collapse</dt><dd>Use a CST or council row to open or close that group. Expand opens all groups in the current view; Collapse closes them. Scroll the board horizontally on smaller screens.</dd></div>
+            <div><dt>Post detail</dt><dd>Select a post row for its council, renewal, membership, training, retention and metric signals. The detail stays on the last selected post when filters change.</dd></div>
+            <div><dt>Return to the full view</dt><dd>Clear Search, select All CSTs, All focus areas and All health, then select the All quick filter.</dd></div>
+          </dl>
+        </section>
+        <section id="helpMetrics" class="help-section">
+          <h3>Common Measures</h3>
+          <dl class="help-definitions">
+            <div><dt>Posts and youth</dt><dd>Posts counts the workbook's unit rows, including Clubs. National membership totals follow the workbook Dashboard; focus and board youth totals use Posts rows. Primary youth and national primary YOY do not currently reconcile with the Posts rows.</dd></div>
+            <div><dt>YOY</dt><dd>Year-over-year change in primary youth, shown as a count rather than a percentage. Focus-area YOY sums Posts rows. The youth/YOY pair inside a post row uses the matched UnitMetric YOY when available; the selected post detail uses primary YOY.</dd></div>
+            <div><dt>Unit Metric</dt><dd>The source UnitMetric score, not a dashboard-created rating. Metric bands are Strong at 4 or higher, Watch at 2 to below 4, and Risk below 2. Missing matched scores currently contribute zero to averages and fall in Risk.</dd></div>
+            <div><dt>Training</dt><dd>Complete means both Unit Leader (UL) and Committee Chair (CC) are marked trained. Partial means at least one training signal is present; otherwise Gap. The focus-area percentage is the share of posts marked Complete. The national card's metric-credit percentage instead counts scores of at least 1; it is not a training completion rate.</dd></div>
+            <div><dt>Average retention</dt><dd>An unweighted average of matched UnitMetric retention values between 0% and 100%. Missing and out-of-range values are excluded. Hover over a focus retention value for the number of included posts. N/A means there are no eligible values, not zero retention.</dd></div>
+            <div><dt>Focus areas</dt><dd>Inferred from charter organization and post name, with the workbook Law/Fire flag as a fallback. These are approximate categories, not an official career-interest classification.</dd></div>
+            <div><dt>Progress bars</dt><dd>The share of six signals met across the group's posts: size, growth, youth leadership, outdoor, complete UL/CC training, and a Unit Metric of at least 3. Each signal has equal weight.</dd></div>
+            <div><dt>Renewal labels</dt><dd>Next 120 is a future renewal within 120 days of capture. Past is before capture; Later is beyond the window; Unscheduled has no renewal date. These labels do not prove that a renewal has been submitted or approved.</dd></div>
+          </dl>
+          <h3>Health and Status Labels</h3>
+          <dl class="help-definitions">
+            <div><dt>Strong health</dt><dd>At least 10 youth, nonnegative primary YOY and a Unit Metric of at least 2.</dd></div>
+            <div><dt>Needs attention</dt><dd>If not Strong: fewer than 5 youth, primary YOY below -5, or a zero/missing Unit Metric. Other posts are Watch.</dd></div>
+            <div><dt>Board signals</dt><dd>Size, growth, leadership and outdoor come from UnitMetric flags. Green is a positive signal, gold indicates review, and red indicates a gap or risk; text labels give the meaning.</dd></div>
+            <div><dt>Missing records</dt><dd>Unmatched UnitMetric records currently show zero scores and unmet signals. A missing match is not proof that the unit failed a requirement. Use Source and metric definitions to check known coverage gaps.</dd></div>
+          </dl>
+        </section>
+        <section id="helpSource" class="help-section">
+          <h3>Sources, Freshness and Privacy</h3>
+          <p id="helpWorkbook"></p>
+          <p id="helpSourceNotes"></p>
+          <p>The public JSON and Posts CSV contain the published snapshot. Contact names, email, phone, address and website fields are excluded. Confirm discrepancies against the original workbook before acting.</p>
+          <div class="help-links"><a href="../data/national-exploring-dashboard-data.json" target="_blank" rel="noopener">Published data</a><a href="../data/national-exploring-posts.csv">Posts CSV</a></div>
+        </section>
+        <section id="helpTrouble" class="help-section">
+          <h3>Troubleshooting</h3>
+          <dl class="help-definitions">
+            <div><dt>Missing post or empty board</dt><dd>Clear Search and all filters, including the quick filter. Expand the appropriate CST and council. If the record is still missing, compare with the source workbook.</dd></div>
+            <div><dt>Old numbers or appearance</dt><dd>Reload the page and check Data as of at the top. If the source workbook is newer, the dashboard needs a new capture and publication.</dd></div>
+            <div><dt>Totals disagree</dt><dd>Check whether the view is national or filtered, and distinguish total youth from primary youth and metric YOY. Review the source reconciliation notes above.</dd></div>
+            <div><dt>Need assistance</dt><dd>Include the dashboard URL, source date, selected filters, affected unit ID, expected result and a screenshot with your support request.</dd></div>
+          </dl>
+        </section>
+      </div>
+      <footer class="help-footer"><span>Exploring dashboard guide</span><button id="printHelp" type="button">Print / Save as PDF</button></footer>
+    </dialog>
+
+    <script src="exploring-dashboard.js?v=2026-10-26-help"></script>
   </body>
 </html>

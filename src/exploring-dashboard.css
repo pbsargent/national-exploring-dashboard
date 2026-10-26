@@ -103,8 +103,97 @@ h1 {
 .source-notes { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
 .source-notes summary { cursor: pointer; }
 
+.help-trigger,
+.help-close,
+.help-footer button {
+  background: var(--control);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  min-height: 40px;
+}
+
+.help-trigger { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; }
+.help-trigger span { border: 1px solid currentColor; border-radius: 50%; display: grid; place-items: center; width: 20px; height: 20px; font-weight: 800; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+body:has(.help-dialog[open]) { overflow: hidden; }
+
+.help-dialog {
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  width: min(1000px, calc(100vw - 24px));
+  height: min(850px, calc(100dvh - 24px));
+  max-width: none;
+  max-height: calc(100dvh - 24px);
+  box-shadow: 0 20px 70px #00000066;
+}
+
+.help-dialog[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.help-dialog::backdrop { background: #00000099; }
+.help-header { display: flex; align-items: start; justify-content: space-between; gap: 18px; padding: 20px 24px; border-bottom: 3px solid var(--accent); }
+.help-header h2 { font-size: 1.2rem; overflow-wrap: anywhere; }
+.help-header p:last-child { font-size: 0.85rem; color: var(--muted); margin: 8px 0 0; }
+.help-close { flex: 0 0 40px; width: 40px; font-size: 1.6rem; line-height: 1; }
+.help-content { overflow: auto; overscroll-behavior: contain; padding: 0 24px; line-height: 1.5; }
+.help-topics, .help-links { display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.help-topics { padding: 18px 0; border-bottom: 1px solid var(--line); }
+.help-topics a, .help-links a { text-decoration: underline; text-underline-offset: 3px; }
+.help-section { padding: 22px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 12px; }
+.help-section:last-child { border-bottom: 0; }
+.help-section h3 { margin: 0 0 14px; font: 900 1rem "Arial Black", Arial, sans-serif; }
+.help-section h3:not(:first-child) { margin-top: 24px; }
+.help-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 32px; padding-left: 22px; margin: 0; }
+.help-steps li { padding-left: 3px; }
+.help-definitions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; margin: 0; }
+.help-definitions > div { min-width: 0; }
+.help-definitions dt { font-weight: 800; margin-bottom: 5px; }
+.help-definitions dd { margin: 0; color: var(--muted); }
+.help-section p { margin: 0 0 14px; }
+.help-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--line); padding: 12px 24px; color: var(--muted); font-size: 0.85rem; }
+.help-footer button { padding: 8px 12px; }
+
+@media (max-width: 720px) {
+  .help-header { padding: 16px; }
+  .help-content { padding: 0 16px; }
+  .help-footer { padding: 12px 16px; }
+  .help-definitions, .help-steps { grid-template-columns: 1fr; }
+  .help-header h2 { font-size: 1rem; }
+}
+
 h2 {
   font-size: 1rem;
+}
+
+@media print {
+  body:has(.help-dialog[open]) { overflow: visible; }
+  body:has(.help-dialog[open]) > .app-header,
+  body:has(.help-dialog[open]) > main { display: none; }
+  .help-dialog[open] {
+    --panel: #ffffff;
+    --ink: #000000;
+    --muted: #525252;
+    --line: #cccccc;
+    --link: #221850;
+    color-scheme: light;
+    position: static;
+    display: block;
+    height: auto;
+    max-height: none;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+  .help-dialog::backdrop { display: none; }
+  .help-dialog .help-content { overflow: visible; padding: 0; }
+  .help-dialog .help-header { padding: 0 0 14px; }
+  .help-dialog .help-close, .help-dialog .help-topics, .help-dialog .help-footer button { display: none; }
+  .help-dialog .help-definitions > div, .help-dialog .help-steps li { break-inside: avoid; }
 }
 
 .header-actions {
