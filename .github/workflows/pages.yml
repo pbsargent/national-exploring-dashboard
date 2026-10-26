@@ -29,7 +29,7 @@ jobs:
           mkdir -p _site/src/assets _site/data
           cp index.html .nojekyll _site/
           cp src/index.html src/exploring-dashboard.css src/exploring-dashboard.js _site/src/
-          cp src/assets/favicon-*.png src/assets/scouting-america-signature.png _site/src/assets/
+          cp src/assets/exploring-*.png _site/src/assets/
           cp data/national-exploring-dashboard-data.json data/national-exploring-posts.csv data/national-exploring-council-cst-map.csv _site/data/
       - uses: actions/upload-pages-artifact@v3
         with:
