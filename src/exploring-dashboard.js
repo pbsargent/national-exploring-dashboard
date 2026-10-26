@@ -74,7 +74,9 @@ function renderBars(id, items, valueKey, labelKey, formatter = (v) => fmt.format
 
 function renderSummary() {
   const summary = state.data.summary;
-  setText("updatedAt", `Source saved ${shortDate(state.data.sourceModifiedAt?.slice(0, 10))}`);
+  setText("updatedAt", `Data as of ${shortDate(state.data.sourceAsOf || state.data.sourceModifiedAt?.slice(0, 10))}`);
+  const notes = state.data.sourceNotes;
+  if (notes) setText("sourceNotes", `Captured ${shortDate(state.data.generatedAt?.slice(0, 10))}. Primary youth: ${fmt.format(notes.primaryYouthDashboard)} on the workbook Dashboard; ${fmt.format(notes.primaryYouthPostRows)} across Posts rows. National primary youth uses the Dashboard total; focus metrics use Posts rows. ${fmt.format(notes.postsWithoutUnitMetric)} posts have no matched UnitMetric record. ${notes.focusMethod} ${notes.retentionMethod} ${fmt.format(notes.invalidRetentionValues)} out-of-range retention values excluded.`);
   setText("postCount", fmt.format(summary.posts));
   setText("needsAttention", `${fmt.format(summary.needsAttention)} need attention`);
   setText("youthCount", fmt.format(summary.totalYouth));
@@ -90,9 +92,7 @@ function passesQuickFilter(post) {
   if (state.quickFilter === "attention") return post.health === "Needs attention";
   if (state.quickFilter === "renewal") {
     if (!post.renewalDate) return false;
-    const renewal = new Date(`${post.renewalDate}T00:00:00`);
-    const cutoff = new Date("2026-11-01T00:00:00");
-    return renewal <= cutoff;
+    return renewalLabel(post) === "Next 120";
   }
   return true;
 }
@@ -251,7 +251,8 @@ function summarizeFocusAreas(rows) {
     .map((group) => {
       const primaryYoy = group.rows.reduce((sum, post) => sum + asNumber(post.primaryYoy), 0);
       const metricTotal = group.rows.reduce((sum, post) => sum + asNumber(post.unitMetric), 0);
-      const retentionTotal = group.rows.reduce((sum, post) => sum + asNumber(post.retention), 0);
+      const retentionRows = group.rows.filter((post) => post.retention != null && Number.isFinite(Number(post.retention)) && Number(post.retention) >= 0 && Number(post.retention) <= 1);
+      const retentionTotal = retentionRows.reduce((sum, post) => sum + Number(post.retention), 0);
       const completeTraining = group.rows.filter((post) => trainingLabel(post) === "Complete").length;
       const needsAttention = group.rows.filter((post) => post.health === "Needs attention").length;
       return {
@@ -260,7 +261,8 @@ function summarizeFocusAreas(rows) {
         youth: group.youth,
         primaryYoy,
         averageMetric: group.rows.length ? metricTotal / group.rows.length : 0,
-        retentionRate: group.rows.length ? retentionTotal / group.rows.length : 0,
+        retentionRate: retentionRows.length ? retentionTotal / retentionRows.length : null,
+        retentionCount: retentionRows.length,
         trainingRate: group.rows.length ? completeTraining / group.rows.length : 0,
         needsAttention,
         progress: progressFor(group.rows),
@@ -289,7 +291,7 @@ function renderFocusSummary() {
         <span>Youth</span>
         <span>YOY</span>
         <span>Metric</span>
-        <span>Retention</span>
+        <span title="Unweighted average of available UnitMetric retention values">Avg retention</span>
         <span>Training</span>
         <span>Attention</span>
       </div>
@@ -299,13 +301,13 @@ function renderFocusSummary() {
             <strong>${escapeHtml(item.focus || "General")}</strong>
             <div class="track"><div class="fill" style="--w:${item.progress}%"></div></div>
           </div>
-          <span>${fmt.format(item.posts)}</span>
-          <span>${fmt.format(item.youth)}</span>
-          <span class="delta ${item.primaryYoy >= 0 ? "positive" : "negative"}">${signedNumber(item.primaryYoy)}</span>
-          <span>${oneDecimal.format(item.averageMetric)}</span>
-          <span>${pct.format(item.retentionRate)}</span>
-          <span>${pct.format(item.trainingRate)}</span>
-          <span>
+          <span data-label="Posts">${fmt.format(item.posts)}</span>
+          <span data-label="Youth">${fmt.format(item.youth)}</span>
+          <span data-label="YOY" class="delta ${item.primaryYoy >= 0 ? "positive" : "negative"}">${signedNumber(item.primaryYoy)}</span>
+          <span data-label="Metric">${oneDecimal.format(item.averageMetric)}</span>
+          <span data-label="Avg retention" title="${fmt.format(item.retentionCount)} posts with retention data">${item.retentionRate === null ? "N/A" : pct.format(item.retentionRate)}</span>
+          <span data-label="Training">${pct.format(item.trainingRate)}</span>
+          <span data-label="Attention">
             <span class="status-chip ${item.needsAttention ? "bad" : "good"}">${fmt.format(item.needsAttention)}</span>
           </span>
         </div>
@@ -429,7 +431,7 @@ function renderDetail(post) {
       <dt>Leadership</dt><dd>${healthLabel(post.youthLeadershipHealthy)}</dd>
       <dt>Outdoor</dt><dd>${healthLabel(post.outdoorHealthy)}</dd>
       <dt>Training</dt><dd>${trainingLabel(post)} (UL ${post.ulTrained ? "Yes" : "No"}, CC ${post.ccTrained ? "Yes" : "No"})</dd>
-      <dt>Retention</dt><dd>${pct.format(post.retention || 0)}</dd>
+      <dt>Retention</dt><dd>${post.retention == null ? "Not available" : pct.format(post.retention)}</dd>
       <dt>Focus</dt><dd>${post.focus}</dd>
     </dl>
   `;

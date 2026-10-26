@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>National Exploring Dashboard</title>
     <link rel="icon" href="assets/favicon-32.png">
-    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-07-08-retention">
+    <link rel="stylesheet" href="exploring-dashboard.css?v=2026-10-26">
   </head>
   <body>
     <header class="app-header">
       <div>
+        <img class="brand-signature" src="assets/scouting-america-signature.png" alt="Scouting America" width="1370" height="240">
         <p class="eyebrow">National dashboard</p>
         <h1>National Exploring Dashboard</h1>
       </div>
@@ -53,6 +54,11 @@
         <h2>Focus Area Metrics</h2>
         <div id="focusSummary" class="focus-summary"></div>
       </section>
+
+      <details class="source-notes">
+        <summary>Source and metric definitions</summary>
+        <p id="sourceNotes"></p>
+      </details>
 
       <section class="controls" aria-label="Filters">
         <label>
@@ -121,6 +127,6 @@
       </section>
     </main>
 
-    <script src="exploring-dashboard.js?v=2026-07-08-retention"></script>
+    <script src="exploring-dashboard.js?v=2026-10-26"></script>
   </body>
 </html>
