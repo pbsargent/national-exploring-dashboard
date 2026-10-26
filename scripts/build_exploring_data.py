@@ -270,7 +270,7 @@ def main():
             "posts": integer(row.get("Posts")),
             "averageMetric": number(row.get("Average Metric")),
             "lowMetricPosts": integer(row.get("0-2")),
-            "midMetricPosts": integer(row.get(3)),
+            "midMetricPosts": integer(row.get("3")),
             "highMetricPosts": integer(row.get("4-5")),
             "trainedRate": number(row.get("UL & CC Trained")),
             "sizeRate": number(row.get("Exceeds Small Unit Threshold")),
@@ -293,6 +293,8 @@ def main():
         "sourceNotes": {
             "primaryYouthDashboard": primary_youth,
             "primaryYouthPostRows": sum(p["primaryYouth"] for p in posts),
+            "primaryYoyDashboard": primary_yoy,
+            "primaryYoyPostRows": sum(p["primaryYoy"] for p in posts),
             "postsWithoutUnitMetric": sum(not p["metricAvailable"] for p in posts),
             "invalidRetentionValues": sum(p["retention"] is not None and not 0 <= p["retention"] <= 1 for p in posts),
             "focusMethod": "Inferred from charter organization and post name; not an official focus classification.",

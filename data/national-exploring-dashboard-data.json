@@ -3,10 +3,12 @@
   "sourceWorkbook": "National Exploring Spreadsheet Capture 2026-10-26.xlsx",
   "sourceModifiedAt": "2026-10-26T10:18:35",
   "sourceAsOf": "2026-10-23",
-  "generatedAt": "2026-10-26T10:20:56",
+  "generatedAt": "2026-10-26T10:24:13",
   "sourceNotes": {
     "primaryYouthDashboard": 27179,
     "primaryYouthPostRows": 25393,
+    "primaryYoyDashboard": -2667,
+    "primaryYoyPostRows": 2598,
     "postsWithoutUnitMetric": 158,
     "invalidRetentionValues": 33,
     "focusMethod": "Inferred from charter organization and post name; not an official focus classification.",

@@ -76,7 +76,7 @@ function renderSummary() {
   const summary = state.data.summary;
   setText("updatedAt", `Data as of ${shortDate(state.data.sourceAsOf || state.data.sourceModifiedAt?.slice(0, 10))}`);
   const notes = state.data.sourceNotes;
-  if (notes) setText("sourceNotes", `Captured ${shortDate(state.data.generatedAt?.slice(0, 10))}. Primary youth: ${fmt.format(notes.primaryYouthDashboard)} on the workbook Dashboard; ${fmt.format(notes.primaryYouthPostRows)} across Posts rows. National primary youth uses the Dashboard total; focus metrics use Posts rows. ${fmt.format(notes.postsWithoutUnitMetric)} posts have no matched UnitMetric record. ${notes.focusMethod} ${notes.retentionMethod} ${fmt.format(notes.invalidRetentionValues)} out-of-range retention values excluded.`);
+  if (notes) setText("sourceNotes", `Captured ${shortDate(state.data.generatedAt?.slice(0, 10))}. Primary youth: ${fmt.format(notes.primaryYouthDashboard)} on the workbook Dashboard; ${fmt.format(notes.primaryYouthPostRows)} across Posts rows. Primary YOY: ${signedNumber(notes.primaryYoyDashboard)} on the Dashboard; ${signedNumber(notes.primaryYoyPostRows)} across Posts rows. National primary youth and YOY use Dashboard totals; focus metrics use Posts rows. ${fmt.format(notes.postsWithoutUnitMetric)} posts have no matched UnitMetric record. ${notes.focusMethod} ${notes.retentionMethod} ${fmt.format(notes.invalidRetentionValues)} out-of-range retention values excluded.`);
   setText("postCount", fmt.format(summary.posts));
   setText("needsAttention", `${fmt.format(summary.needsAttention)} need attention`);
   setText("youthCount", fmt.format(summary.totalYouth));
